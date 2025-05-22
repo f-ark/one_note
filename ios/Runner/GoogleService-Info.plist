@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>30737433081-qvil07d9gndl9gj45044hiqmpr44oe7j.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.30737433081-qvil07d9gndl9gj45044hiqmpr44oe7j</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>30737433081-55rlv3g54um1280hg6tbee5f7hf3v5fh.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAXxPk2vg618sfYRlt6AYXi2yMyoPwjxJg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>30737433081</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.oneNote</string>
+	<key>PROJECT_ID</key>
+	<string>ferdi-baba</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ferdi-baba.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:30737433081:ios:b450595b9dc48262f0fd28</string>
+	<key>DATABASE_URL</key>
+	<string>https://ferdi-baba-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
