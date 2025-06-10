@@ -18,17 +18,58 @@ class MyApp extends ConsumerWidget {
     final routerDelegate = AppRouterDelegate(ref);
     final routeInformationParser = AppRouteInformationParser();
 
+    // Ana renk: #7719AA
+    const primaryColor = Color(0xFF7719AA);
+
+    final lightColorScheme = ColorScheme.fromSeed(seedColor: primaryColor);
+    final darkColorScheme = ColorScheme.fromSeed(
+      seedColor: primaryColor,
+      brightness: Brightness.dark,
+    );
+
     return MaterialApp.router(
       title: 'One Note',
       theme: ThemeData(
+        colorScheme: lightColorScheme,
         useMaterial3: true,
-        colorSchemeSeed: Colors.deepPurple,
-        brightness: Brightness.light,
+        appBarTheme: AppBarTheme(
+          backgroundColor: lightColorScheme.primary,
+          foregroundColor: lightColorScheme.onPrimary,
+          elevation: 2,
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: lightColorScheme.primary,
+          foregroundColor: lightColorScheme.onPrimary,
+        ),
+        cardTheme: CardThemeData(
+          color: lightColorScheme.surface,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        scaffoldBackgroundColor: lightColorScheme.surface,
       ),
       darkTheme: ThemeData(
+        colorScheme: darkColorScheme,
         useMaterial3: true,
-        colorSchemeSeed: Colors.deepPurple,
-        brightness: Brightness.dark,
+        appBarTheme: AppBarTheme(
+          backgroundColor: darkColorScheme.primary,
+          foregroundColor: darkColorScheme.onPrimary,
+          elevation: 2,
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: darkColorScheme.primary,
+          foregroundColor: darkColorScheme.onPrimary,
+        ),
+        cardTheme: CardThemeData(
+          color: darkColorScheme.surface,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        scaffoldBackgroundColor: darkColorScheme.surface,
       ),
       routerDelegate: routerDelegate,
       routeInformationParser: routeInformationParser,

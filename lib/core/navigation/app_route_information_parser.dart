@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:one_note/core/navigation/app_route_path.dart';
 
+/// RouteInformation nesnesini uygulama route'larına çeviren parser.
 class AppRouteInformationParser
     extends RouteInformationParser<List<AppRoutePath>> {
+  /// RouteInformation'dan uygulama route'larını çözümler.
   @override
   Future<List<AppRoutePath>> parseRouteInformation(
     RouteInformation routeInformation,
@@ -24,6 +26,7 @@ class AppRouteInformationParser
     return [const AppRoutePath.unknown()];
   }
 
+  /// Uygulama route'larından RouteInformation oluşturur.
   @override
   RouteInformation? restoreRouteInformation(List<AppRoutePath> configuration) {
     if (configuration.isEmpty) {

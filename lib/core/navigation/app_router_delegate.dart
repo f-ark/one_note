@@ -1,77 +1,94 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:one_note/core/navigation/app_route_enum.dart';
-import 'package:one_note/core/navigation/app_route_path.dart';
+import 'package:one_note/core/navigation/app_route_state.dart';
+import 'package:one_note/features/authentication/data/auth_repository.dart';
+import 'package:one_note/features/authentication/presentation/login/login_screen.dart';
 import 'package:one_note/features/notes/domain/note.dart';
-import 'package:one_note/features/notes/presentation/note_edit_screen.dart';
-import 'package:one_note/features/notes/presentation/notes_list_screen.dart';
-import 'package:one_note/features/notes/provider/notes_provider.dart';
-import 'package:one_note/features/notes/provider/pages_provider.dart';
+import 'package:one_note/features/notes/presentation/note_edit_and_detail_screen.dart';
+import 'package:one_note/features/notes/presentation/notes_controller.dart';
+import 'package:one_note/features/notes/presentation/notes_screen.dart';
 
-class AppRouterDelegate extends RouterDelegate<List<AppRoutePath>>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<List<AppRoutePath>> {
-  final WidgetRef ref;
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
+/// Uygulamanın yönlendirme (routing) işlemlerini yöneten RouterDelegate.
+class AppRouterDelegate extends RouterDelegate<Object>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<Object> {
+  /// Yeni bir AppRouterDelegate oluşturur.
   AppRouterDelegate(this.ref) {
-    ref.listen<List<AppRoutePath>>(pagesProvider, (_, __) => notifyListeners());
+    ref.listen(appRouteNotifierProvider, (_, __) => notifyListeners());
   }
 
+  /// Navigator için anahtar.
   @override
-  List<AppRoutePath> get currentConfiguration => ref.read(pagesProvider);
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  /// Riverpod WidgetRef referansı.
+  final WidgetRef ref;
 
   @override
   Widget build(BuildContext context) {
-    final pages = ref.watch(pagesProvider);
+    final appUserAsync = ref.watch(appUserStreamProvider);
+    final routeState = ref.watch(appRouteNotifierProvider);
+
     return Navigator(
       key: navigatorKey,
-      pages: [for (final path in pages) ..._buildPage(path, ref)],
+      pages: [
+        appUserAsync.when(
+          data: (user) {
+            if (user == null) {
+              return const MaterialPage(
+                key: ValueKey('login_and_sign_in_screen'),
+                child: LoginAndSignInScreen(),
+              );
+            } else {
+              // Notlar listesi ana sayfa
+              return const MaterialPage(
+                key: ValueKey('notes_screen'),
+                child: NotesScreen(),
+              );
+            }
+          },
+          loading:
+              () => const MaterialPage(
+                key: ValueKey('loading_screen'),
+                child: Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                ),
+              ),
+          error:
+              (e, _) => MaterialPage(
+                key: ValueKey('error_screen'),
+                child: Scaffold(body: Center(child: Text('Hata: $e'))),
+              ),
+        ),
+        // Kullanıcı giriş yaptıysa ve NoteEditRoute ise, NoteEditScreen'i ekle
+        if (appUserAsync.asData?.value != null && routeState is NoteEditRoute)
+          MaterialPage(
+            key: ValueKey('note_edit_and_detail_screen'),
+            child: NoteEditAndDetailScreen(
+              note: _findNoteById(routeState.noteId),
+            ),
+          ),
+      ],
       onPopPage: (route, result) {
-        if (!route.didPop(result)) return false;
-        ref.read(pagesProvider.notifier).pop();
-        return true;
+        if (routeState is NoteEditRoute) {
+          ref.read(appRouteNotifierProvider.notifier).goToNotesList();
+        }
+        return route.didPop(result);
       },
     );
   }
 
-  List<Page<dynamic>> _buildPage(AppRoutePath path, WidgetRef ref) {
-    switch (path.route) {
-      case AppRoute.notesList:
-        return [const MaterialPage(child: NotesListScreen())];
-      case AppRoute.noteEdit:
-        return [
-          MaterialPage(
-            child: NoteEditScreen(
-              note:
-                  path.noteId == null ? null : _findNoteById(ref, path.noteId!),
-            ),
-          ),
-        ];
-      case AppRoute.unknown:
-        return [
-          MaterialPage(
-            child: Scaffold(
-              appBar: AppBar(title: const Text('Sayfa bulunamadı')),
-              body: const Center(child: Text('404 - Sayfa bulunamadı')),
-            ),
-          ),
-        ];
+  /// Belirli bir noteId ile notu bulur. ( Uygulamada provider'dan alınmalı)
+  Note? _findNoteById(String? noteId) {
+    if (noteId == null) return null;
+    final notesState = ref.read(notesControllerProvider);
+    if (notesState is AsyncData) {
+      final notes = notesState.value as List<Note>?;
+      if (notes == null) return null;
+      return notes.where((note) => note.id == noteId).cast<Note?>().firstOrNull;
     }
+    return null;
   }
 
   @override
-  Future<void> setNewRoutePath(List<AppRoutePath> configuration) async {
-    ref.read(pagesProvider.notifier).setStack(configuration);
-  }
-
-  Note? _findNoteById(WidgetRef ref, String id) {
-    final notes = ref.read(notesProvider).value;
-    final note = notes?.firstWhere(
-      (n) => n.id == id,
-      orElse:
-          () => Note(id: '', title: '', content: '', createdAt: DateTime(0)),
-    );
-    if (note == null || note.id.isEmpty) return null;
-    return note;
-  }
+  Future<void> setNewRoutePath(Object configuration) async {}
 }

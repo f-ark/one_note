@@ -1,17 +1,32 @@
-import 'app_route_enum.dart';
+import 'package:one_note/core/navigation/app_route_enum.dart';
 
+/// Uygulama içi route bilgisini temsil eden model.
 class AppRoutePath {
-  final AppRoute route;
-  final String? noteId;
-
-  const AppRoutePath._(this.route, {this.noteId});
-
-  const AppRoutePath.notesList() : this._(AppRoute.notesList);
-  const AppRoutePath.noteEdit({String? noteId})
-    : this._(AppRoute.noteEdit, noteId: noteId);
+  /// Bilinmeyen route oluşturur.
   const AppRoutePath.unknown() : this._(AppRoute.unknown);
 
+  /// Not düzenleme route'u oluşturur.
+  const AppRoutePath.noteEdit({String? noteId})
+    : this._(AppRoute.noteEdit, noteId: noteId);
+
+  /// Notlar listesi route'u oluşturur.
+  const AppRoutePath.notesList() : this._(AppRoute.notesList);
+
+  /// Özel constructor.
+  const AppRoutePath._(this.route, {this.noteId});
+
+  /// Route türü.
+  final AppRoute route;
+
+  /// Not kimliği (varsa).
+  final String? noteId;
+
+  /// Route notlar listesi mi?
   bool get isNotesList => route == AppRoute.notesList;
+
+  /// Route not düzenleme mi?
   bool get isNoteEdit => route == AppRoute.noteEdit;
+
+  /// Route bilinmeyen mi?
   bool get isUnknown => route == AppRoute.unknown;
 }

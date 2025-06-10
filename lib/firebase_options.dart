@@ -14,6 +14,8 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
+// Bu dosya Firebase yapılandırma ayarlarını içerir.
+// Otomatik olarak oluşturulmuştur. Manuel düzenlemeyin.
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -73,9 +75,10 @@ class DefaultFirebaseOptions {
     projectId: 'ferdi-baba',
     databaseURL: 'https://ferdi-baba-default-rtdb.firebaseio.com',
     storageBucket: 'ferdi-baba.appspot.com',
-    androidClientId: '30737433081-55rlv3g54um1280hg6tbee5f7hf3v5fh.apps.googleusercontent.com',
-    iosClientId: '30737433081-qvil07d9gndl9gj45044hiqmpr44oe7j.apps.googleusercontent.com',
+    androidClientId:
+        '30737433081-55rlv3g54um1280hg6tbee5f7hf3v5fh.apps.googleusercontent.com',
+    iosClientId:
+        '30737433081-qvil07d9gndl9gj45044hiqmpr44oe7j.apps.googleusercontent.com',
     iosBundleId: 'com.example.oneNote',
   );
-
 }

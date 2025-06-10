@@ -1,28 +1,41 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 /// Uygulamadaki notları temsil eden veri modeli.
+@immutable
 class Note {
+  /// Yeni bir [Note] örneği oluşturur.
+  const Note({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.createdAt,
+    required this.userId,
+  });
+
   /// JSON formatındaki bir Map'ten yeni bir [Note] örneği oluşturur.
   /// Geçersiz formatta bir Map verilirse [FormatException] fırlatır.
   factory Note.fromJson(Map<String, dynamic> json) {
     if (json case {
-      'id': String id,
-      'title': String title,
-      'content': String content,
-      'createdAt': String createdAt,
+      'id': final String id,
+      'title': final String title,
+      'content': final String content,
+      'createdAt': final String createdAt,
+      'userId': final String userId,
     }) {
       return Note(
         id: id,
         title: title,
         content: content,
         createdAt: DateTime.parse(createdAt),
+        userId: userId,
       );
     }
     throw FormatException('Geçersiz Note json formatı: $json');
   }
 
   /// Notun benzersiz kimliği.
-  final String id;
+  final String? id;
 
   /// Notun başlığı.
   final String title;
@@ -33,13 +46,7 @@ class Note {
   /// Notun oluşturulma tarihi ve saati.
   final DateTime createdAt;
 
-  /// Yeni bir [Note] örneği oluşturur.
-  const Note({
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.createdAt,
-  });
+  final String userId;
 
   @override
   bool operator ==(Object other) {
@@ -48,12 +55,17 @@ class Note {
         other.id == id &&
         other.title == title &&
         other.content == content &&
-        other.createdAt == createdAt;
+        other.createdAt == createdAt &&
+        other.userId == userId;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ title.hashCode ^ content.hashCode ^ createdAt.hashCode;
+    return id.hashCode ^
+        title.hashCode ^
+        content.hashCode ^
+        createdAt.hashCode ^
+        userId.hashCode;
   }
 
   /// Not nesnesinin yeni veya güncellenmiş alanlarla bir kopyasını oluşturur.
@@ -62,23 +74,29 @@ class Note {
     String? title,
     String? content,
     DateTime? createdAt,
+    String? userId,
   }) {
     return Note(
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
       createdAt: createdAt ?? this.createdAt,
+      userId: userId ?? this.userId,
     );
   }
 
   /// Not nesnesini JSON formatına dönüştürür.
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
+    final map = <String, dynamic>{
       'title': title,
       'content': content,
       'createdAt': createdAt.toIso8601String(),
+      'userId': userId,
     };
+    if (id != null) {
+      map['id'] = id;
+    }
+    return map;
   }
 
   /// JSON formatındaki bir string'den [Note] listesi oluşturur.
