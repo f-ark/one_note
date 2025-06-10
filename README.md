@@ -99,7 +99,7 @@ Uygulama, Firestore'un yerleşik offline (çevrimdışı) desteğinden yararlan�
 
 ## Uygulama Ekran Görüntüleri
 
-![Flutter Projeleri Mockup](assets/screenshots/flutter_projects_mockup.png)
+![Flutter Projeleri Mockup](screenshots/flutter_projects_mockup.png)
 
 ---
 
